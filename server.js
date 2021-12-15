@@ -1,0 +1,55 @@
+const path = require("path");
+const fs = require("fs");
+const express = require("express");
+const axios = require("axios");
+
+const PORT = 3000;
+const app = express();
+
+const router = express.Router();
+
+const serverRenderer = async (req, res, next) => {
+  const result = await axios.get("http://localhost:8080/?product=speedlab");
+
+  return res.send(
+    `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Document</title>
+    </head>
+    <body>
+      ${result.data}
+      <p>This is the page for the react component</p>
+      <script>!function (e) { function r(r) { for (var n, i, a = r[0], c = r[1], l = r[2], f = 0, p = []; f < a.length; f++)i = a[f], Object.prototype.hasOwnProperty.call(o, i) && o[i] && p.push(o[i][0]), o[i] = 0; for (n in c) Object.prototype.hasOwnProperty.call(c, n) && (e[n] = c[n]); for (s && s(r); p.length;)p.shift()(); return u.push.apply(u, l || []), t() } function t() { for (var e, r = 0; r < u.length; r++) { for (var t = u[r], n = !0, a = 1; a < t.length; a++) { var c = t[a]; 0 !== o[c] && (n = !1) } n && (u.splice(r--, 1), e = i(i.s = t[0])) } return e } var n = {}, o = { 1: 0 }, u = []; function i(r) { if (n[r]) return n[r].exports; var t = n[r] = { i: r, l: !1, exports: {} }; return e[r].call(t.exports, t, t.exports, i), t.l = !0, t.exports } i.e = function (e) { var r = [], t = o[e]; if (0 !== t) if (t) r.push(t[2]); else { var n = new Promise((function (r, n) { t = o[e] = [r, n] })); r.push(t[2] = n); var u, a = document.createElement("script"); a.charset = "utf-8", a.timeout = 120, i.nc && a.setAttribute("nonce", i.nc), a.src = function (e) { return i.p + "static/js/" + ({}[e] || e) + "." + { 3: "d876211b" }[e] + ".chunk.js" }(e); var c = new Error; u = function (r) { a.onerror = a.onload = null, clearTimeout(l); var t = o[e]; if (0 !== t) { if (t) { var n = r && ("load" === r.type ? "missing" : r.type), u = r && r.target && r.target.src; c.message = "Loading chunk " + e + " failed.\n(" + n + ": " + u + ")", c.name = "ChunkLoadError", c.type = n, c.request = u, t[1](c) } o[e] = void 0 } }; var l = setTimeout((function () { u({ type: "timeout", target: a }) }), 12e4); a.onerror = a.onload = u, document.head.appendChild(a) } return Promise.all(r) }, i.m = e, i.c = n, i.d = function (e, r, t) { i.o(e, r) || Object.defineProperty(e, r, { enumerable: !0, get: t }) }, i.r = function (e) { "undefined" != typeof Symbol && Symbol.toStringTag && Object.defineProperty(e, Symbol.toStringTag, { value: "Module" }), Object.defineProperty(e, "__esModule", { value: !0 }) }, i.t = function (e, r) { if (1 & r && (e = i(e)), 8 & r) return e; if (4 & r && "object" == typeof e && e && e.__esModule) return e; var t = Object.create(null); if (i.r(t), Object.defineProperty(t, "default", { enumerable: !0, value: e }), 2 & r && "string" != typeof e) for (var n in e) i.d(t, n, function (r) { return e[r] }.bind(null, n)); return t }, i.n = function (e) { var r = e && e.__esModule ? function () { return e.default } : function () { return e }; return i.d(r, "a", r), r }, i.o = function (e, r) { return Object.prototype.hasOwnProperty.call(e, r) }, i.p = "/", i.oe = function (e) { throw console.error(e), e }; var a = this.webpackJsonpssr = this.webpackJsonpssr || [], c = a.push.bind(a); a.push = r, a = a.slice(); for (var l = 0; l < a.length; l++)r(a[l]); var s = c; t() }([])</script>
+      <script src="http://localhost:8080/static/js/2.3f64a24d.chunk.js"></script>
+      <script src="http://localhost:8080/static/js/main.d3f79bd0.chunk.js"></script>
+    </body>
+    </html>
+    `
+  );
+
+  // fs.readFile(path.resolve("./build/index.html"), "utf8", (err, data) => {
+  //   if (err) {
+  //     console.error(err);
+  //     return res.status(500).send("An error occurred");
+  //   }
+
+  // });
+};
+router.use("^/$", serverRenderer);
+
+// router.use(
+//   express.static(path.resolve(__dirname, "..", "build"), { maxAge: "30d" })
+// );
+
+// tell the app to use the above rules
+app.use(router);
+
+// app.use(express.static('./build'))
+app.listen(PORT, () => {
+  console.log(`SSR running on port ${PORT}`);
+});
