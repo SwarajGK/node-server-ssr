@@ -9,7 +9,7 @@ const app = express();
 const router = express.Router();
 
 const serverRenderer = async (req, res, next) => {
-  const result = await axios.get("http://localhost:8080/?product=speedlab");
+  const result = await axios.get("http://localhost:8080/?product=live");
 
   return res.send(
     `
@@ -31,25 +31,12 @@ const serverRenderer = async (req, res, next) => {
     </html>
     `
   );
-
-  // fs.readFile(path.resolve("./build/index.html"), "utf8", (err, data) => {
-  //   if (err) {
-  //     console.error(err);
-  //     return res.status(500).send("An error occurred");
-  //   }
-
-  // });
 };
 router.use("^/$", serverRenderer);
-
-// router.use(
-//   express.static(path.resolve(__dirname, "..", "build"), { maxAge: "30d" })
-// );
 
 // tell the app to use the above rules
 app.use(router);
 
-// app.use(express.static('./build'))
 app.listen(PORT, () => {
   console.log(`SSR running on port ${PORT}`);
 });
